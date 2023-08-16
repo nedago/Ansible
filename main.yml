@@ -1,0 +1,10 @@
+---
+- name: deploy service
+  hosts: "local"
+  vars_files:
+    - secrets.yml
+
+  roles:
+    - role: common
+    - role: docker
+...
