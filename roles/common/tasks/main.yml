@@ -12,3 +12,21 @@
     user: '{{ user }}'
     state: present
     key: https://github.com/nedago.keys
+
+- name: Allow all access to tcp port 9921, 22
+  ufw:
+    rule: allow
+    port: '{{ item }}'
+    proto: tcp
+  loop:
+    - '9921'
+    - '22'
+  when: ansible_distribution == 'Ubuntu'
+  become: true
+  tags:
+    - install
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+  when: ansible_distribution == 'Ubuntu'
