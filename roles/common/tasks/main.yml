@@ -6,12 +6,14 @@
     shell: /bin/bash
     password: '{{ user_password }}'
     group: sudo
+  tags: common
 
 - name: Add my authorized_key
   authorized_key:
     user: '{{ user }}'
     state: present
     key: https://github.com/nedago.keys
+  tags: common
 
 - name: Allow all access to tcp port 9921, 22
   ufw:
@@ -21,12 +23,24 @@
   loop:
     - '9921'
     - '22'
-  when: ansible_distribution == 'Ubuntu'
   become: true
-  tags:
-    - install
+  tags: common
 
 - name: Enable UFW
   ufw:
     state: enabled
-  when: ansible_distribution == 'Ubuntu'
+
+- name: Install packages
+  apt:
+    pkg:
+    - htop
+    - vim
+    - ntp
+    - unzip
+    update_cache: yes
+  tags: common
+
+- name: Set timezone to Europe/Moscow
+  timezone:
+    name: Europe/Moscow
+  tags: common

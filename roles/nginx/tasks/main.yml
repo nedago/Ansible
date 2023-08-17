@@ -7,57 +7,40 @@
     - ca-certificates
     - lsb-release
     update_cache: yes
-  when: ansible_distribution == 'Ubuntu'
-  become: True
-  tags:
-    - install
+  tags: nginx
 
-- name: apt_repository
+- name: Apt repository
   apt_repository:
     repo: deb http://nginx.org/packages/ubuntu {{ ansible_distribution_release }} nginx
     state: present
     filename: nginx
     update_cache: no
-  when: ansible_distribution == 'Ubuntu'
-  become: True
-  tags:
-    - install
+  tags: nginx
 
-- name: import key
+- name: Import nginx_signing.key
   apt_key:
     url: https://nginx.org/keys/nginx_signing.key
     state: present
-  when: ansible_distribution == 'Ubuntu'
-  become: True
-  tags:
-    - install
+  tags: nginx
 
-- name: update_cache
+- name: Update cache
   apt:
     update_cache: yes
     force: yes
-  become: True
-  when: ansible_distribution == 'Ubuntu'
-  tags:
-    - install
+  tags: nginx
 
-- name: install nginx
+- name: Install nginx
   apt:
     pkg:
     - nginx
-  when: ansible_distribution == 'Ubuntu'
-  become: True
-  tags:
-    - install
+  tags: nginx
 
-- name: nginx start
+- name: Start nginx
   service:
     name: nginx
     state: started
     enabled: yes
-  become: True
-  tags:
-    - install
+  tags: nginx
 
 - name: Allow all access to tcp port 80,443
   ufw:
@@ -68,11 +51,9 @@
     - '80'
     - '443'
   when: ansible_distribution == 'Ubuntu'
-  become: true
-  tags:
-    - install
+  tags: nginx
 
-- name: add nginx config on dest
+- name: Add nginx config on dest
   template:
     src: templates/nginx.conf.j2
     dest: /etc/nginx/conf.d/default.conf
@@ -80,11 +61,9 @@
     group: root
     mode: 0644
   notify: Restart_service_nginx
-  become: true
-  tags:
-    - install
+  tags: nginx
 
-- name: add maintanence.html on dest
+- name: Add maintanence.html on dest
   template:
     src: templates/under-maintanence.html.j2
     dest: /usr/share/nginx/html/under-maintanence.html
@@ -92,6 +71,4 @@
     group: root
     mode: 0644
   notify: Restart_service_nginx
-  become: true
-  tags:
-    - install
+  tags: nginx

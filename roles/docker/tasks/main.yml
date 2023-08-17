@@ -5,21 +5,18 @@
     - ca-certificates
     - curl
     - gnupg
-    update_cache: yes  
-  when: ansible_distribution == 'Ubuntu'
-  become: True
+    update_cache: yes
+  tags: docker
 
 - name: Add Docker’s official GPG key
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
-  when: ansible_distribution == 'Ubuntu'
-  become: true
+  tags: docker
 
 - name: Add repository docker
   apt_repository:
     repo: deb [arch=arm64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable
-  when: ansible_distribution == 'Ubuntu'
-  become: true
+  tags: docker
 
 - name: Install docker pakages
   apt: 
@@ -29,17 +26,16 @@
     - containerd.io
     - docker-buildx-plugin
     - docker-compose-plugin
-    update_cache: yes  
-  when: ansible_distribution == 'Ubuntu'
-  become: True
+    update_cache: yes
+  tags: docker
 
 - name: Creates directory
   file:
     path: /etc/docker
     state: directory
-  become: true
+  tags: docker
 
-- name: Copy file on dest
+- name: Copy file daemon.json on dest
   copy:
     src: daemon.json
     dest: /etc/docker/daemon.json
@@ -47,11 +43,11 @@
     group: root
     mode: 0644
   notify: Restart_service_docker
-  become: true
+  tags: docker
 
 - name: Add the user '{{ host_user }}' group of 'docker'
   user:
     name: "{{ user }}"
     comment: "{{ user_comment }}"
     group: docker
-  become: true
+  tags: docker
