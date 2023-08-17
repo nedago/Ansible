@@ -2,17 +2,14 @@
 - name: Start_service_docker
   service: 
     name: docker
-    state: started  
-  become: True
+    state: started
 
 - name: Enable_service_docker
   service: 
     name: docker
     enabled: yes
-  become: true
 
 - name: Restart_service_docker
   service:
     name: docker
     state: restarted
-  become: true
