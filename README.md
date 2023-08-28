@@ -1,8 +1,7 @@
 ### Это демонстрационный репозиторий с базовыми действиями на сервера через систему управления конфигурации **ansible**     
 
 Старт выполнения playbook:  
-``ansible-playbook -i hosts main.yml --private-key ~/Documents/github/mykeys/id_rsa_nedago --vault-password-file 
-a_password_file -vv`` 
+``ansible-playbook -i hosts main.yml --private-key ~/Documents/github/mykeys/id_rsa_nedago --vault-password-file a_password_file -vv`` 
 
 Структура проекта:   
 **group_vars**  
@@ -12,6 +11,8 @@ a_password_file -vv``
 - _common_ первичная подготовка сервера.  создание пользователя, проброс ssh ключей.
 - _docker_ установка docker, добавление пользователя в его группу, переназначение сети docker по умолчанию   
 - _nginx_ установка nginx, открытие портов, добавление конфигов и страницы тех.работ.
+- _cert_ проброс ssl сертификатов
+- _monitoring_ Установка expoter для системы мониторинга Prometheus
  
 **ansible.cfg**  
 Файл конфигурации ansible  

@@ -1,5 +1,5 @@
 ---
-- name: Install apt packages
+- name: docker | Install apt packages
   apt: 
     pkg: 
     - ca-certificates
@@ -8,17 +8,17 @@
     update_cache: yes
   tags: docker
 
-- name: Add Docker’s official GPG key
+- name: docker | Add Docker’s official GPG key
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
   tags: docker
 
-- name: Add repository docker
+- name: docker | Add repository docker
   apt_repository:
     repo: deb [arch=arm64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable
   tags: docker
 
-- name: Install docker pakages
+- name: docker | Install docker pakages
   apt: 
     pkg: 
     - docker-ce
@@ -26,16 +26,17 @@
     - containerd.io
     - docker-buildx-plugin
     - docker-compose-plugin
+    - python3-pip
     update_cache: yes
   tags: docker
 
-- name: Creates directory
+- name: docker | Creates directory
   file:
     path: /etc/docker
     state: directory
   tags: docker
 
-- name: Copy file daemon.json on dest
+- name: docker | Copy file daemon.json on dest
   copy:
     src: daemon.json
     dest: /etc/docker/daemon.json
@@ -45,9 +46,16 @@
   notify: Restart_service_docker
   tags: docker
 
-- name: Add the user '{{ host_user }}' group of 'docker'
+- name: docker | Add the user '{{ host_user }}' group of 'docker'
   user:
     name: "{{ user }}"
     comment: "{{ user_comment }}"
     group: docker
+  tags: docker
+
+- name: docker | Install required python docker modules
+  pip:
+    name:
+      - docker
+      - docker-compose
   tags: docker

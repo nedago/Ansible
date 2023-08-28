@@ -4,10 +4,9 @@ user_comment: "Denis Polyakov"
 #Зашифровать: ansible-vault encrypt_string --vault-id dev@a_password_file --stdin-name 'user_password'
 #или: echo -n 'myPassword' | ansible-vault encrypt_string --vault-id dev@a_password_file --stdin-name 'user_password'
 #Расшифровать: ansible localhost -m ansible.builtin.debug -a var="user_password" -e "local.yml" --vault-id dev@a_password_file
-user_password: !vault |
-          $ANSIBLE_VAULT;1.2;AES256;dev
-          64656565313237326239306630353461636261373132326233643865303661656461663737366632
-          3134663732366635313035623562396434373166363730610a393066353739373035313766373163
-          39376632393466303961306230346166336135343739333935623863303866626335613037613337
-          6666356435663066650a366661313364643834303064666130383635646338316262613737303439
-          6133
+
+# created with:
+# ansible all -i localhost, -m debug -a "msg={{ 'mypassword' | password_hash('sha512', 'mysecretsalt') }}"
+user_password: "$6$rounds=656000$iArWtydQnQVc4a$J0yNd26xgBCMxDGH0fvPITxEvyE8rp1ZvDLfXvBkykNy8CjM0ZpR0b8O.UNhDqhgZaQ7ejdNL0Tpzp4.ervnb."
+read_token: "{{ access_read_token }}"
+branch: "main"

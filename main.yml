@@ -6,6 +6,7 @@
 
   roles:
     - role: common
-    - role: docker
-    - role: nginx
+#    - role: docker
+#    - role: monitoring
+#    - role: nginx
 ...

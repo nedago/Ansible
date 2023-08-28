@@ -1,0 +1,4 @@
+---
+cert_path: '/etc/nginx/ssl/'
+cert_pem: 'star.crt'
+cert_key: 'star.key'

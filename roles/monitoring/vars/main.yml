@@ -1,0 +1,5 @@
+---
+exporter_path: '/usr/local/bin/exporter'
+servers_prometheus:
+  - 192.168.197.205
+  - 192.168.8.105

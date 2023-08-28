@@ -1,0 +1,36 @@
+---
+- name: monitoring | Create directory
+  file:
+    path='{{ exporter_path }}'
+    state=directory
+  tags: monitoring
+
+- name: monitoring | Copy conf file docker-compose
+  copy:
+    src: files/docker-compose.yml
+    dest: '{{ exporter_path }}/docker-compose.yml'
+  tags: monitoring
+
+- name: monitoring | Run `docker-compose up`
+  docker_compose:
+    project_src: '{{ exporter_path }}'
+    build: false
+  register: output
+  tags: monitoring
+
+- name: monitoring | Show results
+  debug:
+    var: output
+  tags: monitoring
+
+- name: monitoring | Allow access to tcp port 9100 from host {{ servers_prometheus }} and include a comment
+  ufw:
+    rule: allow
+    proto: tcp
+    src: '{{ item }}'
+    port: '9100'
+    comment: Allow port for prometheus
+  loop: '{{ servers_prometheus }}'
+  tags: monitoring
+
+...
