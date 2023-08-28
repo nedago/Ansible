@@ -1,5 +1,10 @@
 ---
-- name: Add the user '{{ user }}' with a specific uid and a primary group of 'sudo'
+- name: common | Set timezone to Europe/Moscow
+  timezone:
+    name: Europe/Moscow
+  tags: common
+
+- name: common | Add the user '{{ user }}' with a specific uid and a primary group of 'sudo'
   user:
     name: '{{ user }}'
     comment: '{{ user_comment }}'
@@ -8,14 +13,21 @@
     group: sudo
   tags: common
 
-- name: Add my authorized_key
+- name: common | Add my authorized_key
   authorized_key:
     user: '{{ user }}'
     state: present
     key: https://github.com/nedago.keys
   tags: common
 
-- name: Allow all access to tcp port 9921, 22
+- name: common | Set authorized key taken from file
+  authorized_key:
+    user: nedago
+    state: present
+    key: "{{ lookup('file', 'id_rsa.pub') }}"
+  tags: common
+
+- name: common | Allow all access to tcp port 9921, 22
   ufw:
     rule: allow
     port: '{{ item }}'
@@ -23,24 +35,47 @@
   loop:
     - '9921'
     - '22'
-  become: true
   tags: common
 
-- name: Enable UFW
+- name: common | Enable UFW
   ufw:
     state: enabled
+  tags: common
 
-- name: Install packages
+- name: common | Install packages
   apt:
     pkg:
     - htop
     - vim
     - ntp
     - unzip
+    - git
     update_cache: yes
   tags: common
 
-- name: Set timezone to Europe/Moscow
-  timezone:
-    name: Europe/Moscow
+- name: common | Creates directory
+  file:
+    path: /var/www/site
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: 0775
   tags: common
+
+
+- name: Delete content & directory
+  file:
+    state: absent
+    path: /opt/this_repo/
+  tags: common
+
+- name: clone a private repository https://github.com/nedago/ansible.git
+  git:
+    repo: "https://read_user:{{ read_token }}@github.com/nedago/ansible.git"
+    dest: "/opt/this_repo"
+    version: "{{ branch }}"
+    recursive: no
+    force: yes
+  tags: common
+
+
