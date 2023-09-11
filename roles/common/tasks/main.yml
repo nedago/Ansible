@@ -63,13 +63,13 @@
   tags: common
 
 
-- name: Delete content & directory
+- name: common | Delete content & directory
   file:
     state: absent
     path: /opt/this_repo/
   tags: common
 
-- name: clone a private repository https://github.com/nedago/ansible.git
+- name: common | clone a private repository https://github.com/nedago/ansible.git
   git:
     repo: "https://read_user:{{ read_token }}@github.com/nedago/ansible.git"
     dest: "/opt/this_repo"

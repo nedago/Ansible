@@ -1,0 +1,38 @@
+---
+- name: docker-swarm | Init a new swarm with default parameters
+  docker_swarm:
+    state: present
+    advertise_addr: eth1
+  tags: docker-swarm
+
+- name: docker-swarm | Create a network
+  docker_network:
+    name: communicate-network
+    driver: overlay
+  tags: docker-swarm
+
+- name: docker-swarm | Set networks
+  docker_swarm_service:
+    name: docker-http-server
+    image: katacoda/docker-http-server
+    env:
+      VIRTUAL_HOST: test1
+    networks:
+      - communicate-network
+  tags: docker-swarm
+#
+#- name: docker-swarm | Log into private registry and force re-authorization
+#  docker_login:
+#    registry: '{{ registry }}'
+#    username: '{{ registry_username }}'
+#    password: '{{ registry_password }}'
+#    reauthorize: yes
+#  tags: docker-swarm
+#
+#- name: docker-swarm | Log out of DockerHub
+#  docker_login:
+#    state: absent
+#  tags: docker-swarm
+#
+
+...
