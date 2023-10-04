@@ -3,10 +3,18 @@
   hosts: "local"
   vars_files:
     - secrets.yml
-
   roles:
     - role: common
-#    - role: docker
+    - role: docker
 #    - role: monitoring
 #    - role: nginx
+
+
+- name: deploy docker-swarm manager
+  hosts: "docker-swarm-manager"
+  vars_files:
+    - secrets.yml
+  roles:
+    - role: docker-swarm
 ...
+
