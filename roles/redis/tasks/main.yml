@@ -1,0 +1,44 @@
+- name: redis | Install apt packages
+  apt:
+    pkg:
+    - lsb-release
+    - curl
+    - gpg
+    update_cache: yes
+  tags: redis
+
+- name: redis | Add redis’s official GPG key
+  apt_key:
+    url: https://packages.redis.io/gpg
+  tags: redis
+
+- name: redis | Add repository redis {{ architecture }}
+  apt_repository:
+    repo: deb [arch={{ architecture }}] https://packages.redis.io/deb {{ ansible_lsb.codename }} main
+  tags: redis
+
+- name: redis | Install redis pakages
+  apt:
+    pkg:
+    - redis
+    update_cache: yes
+  tags: redis
+
+- name: redis | Copy file redis.conf on dest
+  copy:
+    src: redis.conf
+    dest: /etc/redis/redis.conf
+    owner: redis
+    group: redis
+    mode: 0640
+  notify: Restart_service_redis
+  tags: redis
+
+- name: redis | Allow all access to tcp port 6379
+  ufw:
+    rule: allow
+    port: '6379'
+    proto: tcp
+    src: '{{ item }}'
+  loop: '{{ open_app_ip }}'
+  tags: redis
