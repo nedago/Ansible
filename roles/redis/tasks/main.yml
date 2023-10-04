@@ -39,4 +39,6 @@
     rule: allow
     port: '6379'
     proto: tcp
+    src: '{{ item }}'
+  loop: '{{ open_app_ip }}'
   tags: redis
