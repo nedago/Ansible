@@ -25,9 +25,9 @@
   tags: redis
 
 - name: redis | Copy file redis.conf on dest
-  copy:
-    src: redis.conf
-    dest: /etc/redis/redis.conf
+  template:
+    src: 'templates/redis.conf.j2'
+    dest: '/etc/redis/redis.conf'
     owner: redis
     group: redis
     mode: 0640
