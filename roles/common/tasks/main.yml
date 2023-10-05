@@ -50,6 +50,7 @@
     - ntp
     - unzip
     - git
+    - net-tools
     update_cache: yes
   tags: common
 
