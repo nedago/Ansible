@@ -8,6 +8,12 @@
 #    - role: docker
 #    - role: monitoring
 #    - role: nginx
+
+- name: deploy redis
+  hosts: "redis"
+  vars_files:
+    - secrets.yml
+  roles:
     - role: redis
 
 - name: deploy docker-swarm manager
