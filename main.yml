@@ -1,13 +1,19 @@
 ---
 - name: deploy service
-  hosts: "local"
+  hosts: "common"
   vars_files:
     - secrets.yml
   roles:
     - role: common
-#    - role: docker
-#    - role: monitoring
-#    - role: nginx
+    - role: docker
+    - role: monitoring
+
+- name: deploy nginx
+  hosts: "nginx"
+  vars_files:
+    - secrets.yml
+  roles:
+    - role: nginx
 
 - name: deploy redis
   hosts: "redis"
@@ -15,6 +21,13 @@
     - secrets.yml
   roles:
     - role: redis
+
+- name: deploy memcached
+  hosts: "memcached"
+  vars_files:
+    - secrets.yml
+  roles:
+    - role: memcached
 
 - name: deploy docker-swarm manager
   hosts: "docker-swarm-manager"
