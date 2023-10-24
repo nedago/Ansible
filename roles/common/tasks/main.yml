@@ -22,7 +22,7 @@
 
 - name: common | Set authorized key taken from file
   authorized_key:
-    user: nedago
+    user: '{{ user }}'
     state: present
     key: "{{ lookup('file', 'id_rsa.pub') }}"
   tags: common

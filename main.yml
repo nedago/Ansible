@@ -29,6 +29,14 @@
   roles:
     - role: memcached
 
+- name: deploy database
+  hosts: "database"
+  vars_files:
+    - secrets.yml
+  roles:
+    - role: database
+  become: yes
+
 - name: deploy docker-swarm manager
   hosts: "docker-swarm-manager"
   vars_files:

@@ -1,0 +1,75 @@
+---
+- name: database | Install apt packages for database
+  apt:
+    pkg:
+    - postgresql
+    - postgresql-contrib
+    - python3-psycopg2
+    update_cache: yes
+  tags: database
+
+- name: database | Enebled postgresql
+  service:
+    name: postgresql
+    enabled: yes
+  tags: database
+
+- name: database | Start postgresql
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
+  tags: database
+
+- name: database | Create postgre_user
+  postgresql_user:
+    name: "{{ database_user }}"
+    password: "{{ db_pass }}"
+  become_user: postgres
+  tags: database
+
+- name: database | Create database
+  postgresql_db:
+    name: "{{ database_name }}"
+    owner: "{{ database_user }}"
+    template: template0
+  become_user: postgres
+  tags: database
+
+- name: database | Copy file pg_hda.conf
+  template:
+    src: pg_hba.conf.j2
+    dest: /etc/postgresql/14/main/pg_hba.conf
+    mode: 0644
+    owner: postgres
+    group: postgres
+  notify: restart postgres
+  tags: database
+
+- name: database | Copy file postgressql
+  template:
+    src: postgresql.conf.j2
+    dest: /etc/postgresql/14/main/postgresql.conf
+    mode: 0644
+    owner: postgres
+    group: postgres
+  notify: restart postgres
+  tags: database
+
+- name: database | GRANT ALL PRIVILEGES ON SCHEMA public TO {{ database_user }}
+  community.postgresql.postgresql_privs:
+    db: "{{ database_name }}"
+    privs: ALL
+    type: schema
+    objs: public
+    role: "{{ database_user }}"
+  become_user: postgres
+  tags: database
+
+- name: database | Allow all access to tcp port {{ database_port }}
+  ufw:
+    rule: allow
+    port: "{{ database_port }}"
+    proto: tcp
+  tags: database
+
