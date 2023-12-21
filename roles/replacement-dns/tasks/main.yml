@@ -3,7 +3,7 @@
   ansible.builtin.debug:
     msg: "interface {{ item }}'s IPAddress is {{ ansible_facts[item]['ipv4']['address']|default(None) }} and MAC is {{ ansible_facts[item]['macaddress']|default(None) }}"
   with_items:
-  - "{{ ansible_interfaces }}"
+    - "{{ ansible_interfaces }}"
   when: ansible_distribution == 'CentOS'
   tags: replacement-dns
 
@@ -26,11 +26,10 @@
     regexp: "{{ item.before }}"
     insertbefore: BOF
     line: "{{ item.after }}"
-  ignore_errors: True
+  ignore_errors: true
   with_items:
     - { before: 'DNS1=192.168.0.13.*', after: 'DNS1=172.21.211.40' }
     - { before: 'DNS2=192.168.200.53.*', after: 'DNS2=172.21.211.41' }
-#  notify: Restart network
   when: ansible_distribution == 'CentOS'
   tags: replacement-dns
 
@@ -48,13 +47,12 @@
   tags: replacement-dns
 
 - name: Task 3 | Replacement dns on {{ public_interface | default("not") }}
-  shell: "sed -i -e 's/{{ item.before }}/{{ item.after }}/g' 00-installer-config.yaml"
+  shell: "sed -i -e 's/{{ item.before }}/{{ item.after }}/g' *.yaml"
   args:
     chdir: "/etc/netplan/"
   with_items:
     - { before: '192.168.0.13', after: '172.21.211.40' }
     - { before: '192.168.200.53', after: '172.21.211.41' }
-#  notify: Apply netplan
   when: ansible_distribution == 'Ubuntu'
   tags: replacement-dns
 
@@ -87,3 +85,4 @@
 - name: Task 5  | Resolv DNS Server
   debug: msg="{{ out.stdout_lines }}"
   tags: replacement-dns
+...

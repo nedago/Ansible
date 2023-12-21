@@ -1,15 +1,16 @@
 ---
 - name: Start_service_docker
-  service: 
+  service:
     name: docker
     state: started
 
 - name: Enable_service_docker
-  service: 
+  service:
     name: docker
-    enabled: yes
+    enabled: true
 
 - name: Restart_service_docker
   service:
     name: docker
     state: restarted
+...

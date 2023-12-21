@@ -32,5 +32,4 @@
     comment: Allow port for prometheus
   loop: '{{ servers_prometheus }}'
   tags: monitoring
-
 ...

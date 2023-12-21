@@ -1,17 +1,17 @@
 ---
-- name: docker-swarm | Init a new swarm with default parameters
+- name: Task 1 | Init a new swarm with default parameters
   docker_swarm:
     state: present
     advertise_addr: eth1
   tags: docker-swarm
 
-- name: docker-swarm | Create a network
+- name: Task 2 | Create a network
   docker_network:
     name: communicate-network
     driver: overlay
   tags: docker-swarm
 
-- name: docker-swarm | Set networks
+- name: Task 3 | Set networks
   docker_swarm_service:
     name: docker-http-server
     image: katacoda/docker-http-server
@@ -21,7 +21,7 @@
       - communicate-network
   tags: docker-swarm
 #
-#- name: docker-swarm | Log into private registry and force re-authorization
+#- name: Task 4 | Log into private registry and force re-authorization
 #  docker_login:
 #    registry: '{{ registry }}'
 #    username: '{{ registry_username }}'
@@ -29,10 +29,9 @@
 #    reauthorize: yes
 #  tags: docker-swarm
 #
-#- name: docker-swarm | Log out of DockerHub
+#- name: Task 5 | Log out of DockerHub
 #  docker_login:
 #    state: absent
 #  tags: docker-swarm
 #
-
 ...

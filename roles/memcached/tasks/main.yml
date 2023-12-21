@@ -1,13 +1,14 @@
-- name: memcached | Install apt packages
+---
+- name: Task 1 | Install apt packages
   apt:
     pkg:
-    - memcached
-    - libmemcached-tools
-    - sasl2-bin
-    update_cache: yes
+      - memcached
+      - libmemcached-tools
+      - sasl2-bin
+    update_cache: true
   tags: memcached
 
-- name: memcached | Copy file memcached.conf on dest
+- name: Task 2 | Copy file memcached.conf on dest
   template:
     src: 'templates/memcached.conf.j2'
     dest: '/etc/memcached.conf'
@@ -17,7 +18,7 @@
   notify: Restart_service_memcached
   tags: memcached
 
-- name: memcached | Allow all access to tcp port 11211
+- name: Task 3 | Allow all access to tcp port 11211
   ufw:
     rule: allow
     port: '11211'
@@ -27,13 +28,13 @@
   loop: '{{ ufw_app_ip }}'
   tags: memcached
 
-- name: memcached | Creates directory /etc/sasl2
+- name: Task 4 | Creates directory /etc/sasl2
   file:
     path: /etc/sasl2
     state: directory
   tags: memcached
 
-- name: memcached | Copy file memcached.conf on dest
+- name: Task 5 | Copy file memcached.conf on dest
   copy:
     src: sasl2_memcached.conf
     dest: /etc/sasl2/memcached.conf
@@ -43,13 +44,13 @@
   notify: Restart_service_memcached
   tags: memcached
 
-- name: memcached | Create a SASL database
+- name: Task 6 | Create a SASL database
   shell: "saslpasswd2 -a memcached -c -f /etc/sasl2/memcached-sasldb2 {{ memcached_user }}"
   args:
     stdin: '{{ memcached_password }}'
   tags: memcached
 
-- name: memcached | Chown memcached-sasldb2
+- name: Task 7 | Chown memcached-sasldb2
   file:
     path: /etc/sasl2/memcached-sasldb2
     owner: memcache
@@ -57,3 +58,4 @@
     mode: 0640
   notify: Restart_service_memcached
   tags: memcached
+...

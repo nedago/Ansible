@@ -2,11 +2,11 @@
 - name: nginx | Install apt packages for nginx
   apt:
     pkg:
-    - curl
-    - gnupg2
-    - ca-certificates
-    - lsb-release
-    update_cache: yes
+      - curl
+      - gnupg2
+      - ca-certificates
+      - lsb-release
+    update_cache: true
   tags: nginx
 
 - name: nginx | Apt repository
@@ -14,7 +14,7 @@
     repo: deb http://nginx.org/packages/ubuntu {{ ansible_distribution_release }} nginx
     state: present
     filename: nginx
-    update_cache: no
+    update_cache: false
   tags: nginx
 
 - name: nginx | Import nginx_signing.key
@@ -25,21 +25,21 @@
 
 - name: Update cache
   apt:
-    update_cache: yes
-    force: yes
+    update_cache: true
+    force: true
   tags: nginx
 
 - name: nginx | Install nginx
   apt:
     pkg:
-    - nginx
+      - nginx
   tags: nginx
 
 - name: nginx | Start nginx
   service:
     name: nginx
     state: started
-    enabled: yes
+    enabled: true
   tags: nginx
 
 - name: nginx | Allow all access to tcp port 80,443

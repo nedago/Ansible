@@ -1,13 +1,13 @@
 ---
 - name: Start_service_nginx
-  service: 
+  service:
     name: nginx
     state: started
 
 - name: Enable_service_nginx
-  service: 
+  service:
     name: nginx
-    enabled: yes
+    enabled: true
 
 - name: Restart_service_nginx
   service:

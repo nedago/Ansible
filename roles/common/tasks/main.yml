@@ -11,7 +11,6 @@
     shell: /bin/bash
     password: "{{ user_password | password_hash('sha512') }}"
     groups:
-#      - docker
       - sudo
   tags: common
 
@@ -47,13 +46,13 @@
 - name: Task 7 | Install packages
   apt:
     pkg:
-    - htop
-    - vim
-    - ntp
-    - unzip
-    - git
-    - net-tools
-    update_cache: yes
+      - htop
+      - vim
+      - ntp
+      - unzip
+      - git
+      - net-tools
+    update_cache: true
   tags: common
 
 - name: Task 8 | Creates directory
@@ -76,8 +75,8 @@
     repo: "https://read_user:{{ read_token }}@github.com/nedago/ansible.git"
     dest: "/opt/this_repo"
     version: "{{ branch }}"
-    recursive: no
-    force: yes
+    recursive: false
+    force: true
   tags: common
 
 - name: Task 11 | Set File Rights

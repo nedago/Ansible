@@ -1,3 +1,4 @@
+---
 ufw_app_ip:
   - 192.168.116.77
   - 192.168.197.205
@@ -7,3 +8,4 @@ app_ip_exports:
 
 memcached_user: memcached_user
 memcached_password: '{{ MEMCACHED_PASS }}'
+...

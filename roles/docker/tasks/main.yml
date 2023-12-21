@@ -1,11 +1,11 @@
 ---
 - name: Task 1 | Install apt packages
-  apt: 
-    pkg: 
-    - ca-certificates
-    - curl
-    - gnupg
-    update_cache: yes
+  apt:
+    pkg:
+      - ca-certificates
+      - curl
+      - gnupg
+    update_cache: true
   tags: docker
 
 - name: Task 2 | Add Docker’s official GPG key
@@ -19,15 +19,15 @@
   tags: docker
 
 - name: Task 4 | Install docker pakages
-  apt: 
-    pkg: 
-    - docker-ce
-    - docker-ce-cli
-    - containerd.io
-    - docker-buildx-plugin
-    - docker-compose-plugin
-    - python3-pip
-    update_cache: yes
+  apt:
+    pkg:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+      - python3-pip
+    update_cache: true
   tags: docker
 
 - name: Task 5 | Creates directory
@@ -59,3 +59,4 @@
       - docker
       - docker-compose
   tags: docker
+...

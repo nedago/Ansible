@@ -24,11 +24,10 @@
   tags: cert
 
 - name: Task 5 | chown cert
-  file: 
+  file:
     dest: "{{ cert_path }}"
     owner: root
     mode: 0600
-    recurse: yes
+    recurse: true
   tags: cert
 ...
-

@@ -1,2 +1,0 @@
-# yaml file containing network configuration /etc/netplan/
-ymal_file: '00-installer-config.yaml'

@@ -1,30 +1,31 @@
-- name: redis | Install apt packages
+---
+- name: Task 1 | Install apt packages
   apt:
     pkg:
-    - lsb-release
-    - curl
-    - gpg
-    update_cache: yes
+      - lsb-release
+      - curl
+      - gpg
+    update_cache: true
   tags: redis
 
-- name: redis | Add redis’s official GPG key
+- name: Task 2 | Add redis’s official GPG key
   apt_key:
     url: https://packages.redis.io/gpg
   tags: redis
 
-- name: redis | Add repository redis {{ architecture }}
+- name: Task 3 | Add repository redis {{ architecture }}
   apt_repository:
     repo: deb [arch={{ architecture }}] https://packages.redis.io/deb {{ ansible_lsb.codename }} main
   tags: redis
 
-- name: redis | Install redis pakages
+- name: Task 4 | Install redis pakages
   apt:
     pkg:
-    - redis
-    update_cache: yes
+      - redis
+    update_cache: true
   tags: redis
 
-- name: redis | Copy file redis.conf on dest
+- name: Task 5 | Copy file redis.conf on dest
   template:
     src: 'templates/redis.conf.j2'
     dest: '/etc/redis/redis.conf'
@@ -34,7 +35,7 @@
   notify: Restart_service_redis
   tags: redis
 
-- name: redis | Allow all access to tcp port 6379
+- name: Task 6 | Allow all access to tcp port 6379
   ufw:
     rule: allow
     port: '6379'
@@ -42,3 +43,4 @@
     src: '{{ item }}'
   loop: '{{ open_app_ip }}'
   tags: redis
+...
