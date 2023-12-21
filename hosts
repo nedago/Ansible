@@ -5,13 +5,16 @@ ansible_become_pass='{{ deploy_become_pass }}'
 vagrant-01 ansible_ssh_host=192.168.10.1 ansible_port=9921 ansible_user=root
 
 [nginx]
-#vagrant-01 ansible_ssh_host=192.168.10.1 ansible_port=9921 ansible_user=root
+;vagrant-01 ansible_ssh_host=192.168.10.1 ansible_port=9921 ansible_user=root
 
 [redis]
-#vagrant-01 ansible_ssh_host=192.168.10.1 ansible_port=9921 ansible_user=root
+;vagrant-01 ansible_ssh_host=192.168.10.1 ansible_port=9921 ansible_user=root
 
 [memcached]
-vagrant-01 ansible_ssh_host=192.168.10.1 ansible_port=9921 ansible_user=root
+;vagrant-01 ansible_ssh_host=192.168.10.1 ansible_port=9921 ansible_user=root
 
 [docker-swarm-manager]
-#vagrant-01 ansible_ssh_host=192.168.10.1 ansible_port=9921 ansible_user=root
+;vagrant-01 ansible_ssh_host=192.168.10.1 ansible_port=9921 ansible_user=root
+
+[replacement-dns]
+;vagrant-01 ansible_ssh_host=192.168.10.1 ansible_port=9921 ansible_user=root

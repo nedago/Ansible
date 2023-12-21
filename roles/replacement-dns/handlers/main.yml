@@ -1,0 +1,14 @@
+---
+- name: Restart network
+  service:
+    name: network
+    state: restarted
+  when: ansible_distribution == 'CentOS'
+  tags: replacement-dns
+
+- name: Apply netplan
+  command: netplan apply
+  async: 45
+  poll: 0
+  when: ansible_distribution == 'Ubuntu'
+  tags: replacement-dns

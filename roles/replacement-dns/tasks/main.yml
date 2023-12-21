@@ -1,0 +1,89 @@
+---
+- name: Task 1 | Get all the network interfaces with IPAddresses and MAC
+  ansible.builtin.debug:
+    msg: "interface {{ item }}'s IPAddress is {{ ansible_facts[item]['ipv4']['address']|default(None) }} and MAC is {{ ansible_facts[item]['macaddress']|default(None) }}"
+  with_items:
+  - "{{ ansible_interfaces }}"
+  when: ansible_distribution == 'CentOS'
+  tags: replacement-dns
+
+- name: Task 2 | Figure out network device of public network
+  set_fact:
+    public_interface: "{{ hostvars[inventory_hostname]['ansible_' + item]['device'] }}"
+  when:
+    - hostvars[inventory_hostname]['ansible_' + item].ipv4 is defined
+    - hostvars[inventory_hostname]['ansible_' + item]['ipv4']['address'] == '{{ ansible_ssh_host }}'
+  with_items: "{{ ansible_interfaces }}"
+- name: Task 2 | print public network interface
+  debug:
+    msg: Interface {{ public_interface | default("not") }} found on {{ ansible_ssh_host }}
+  when: ansible_distribution == 'CentOS'
+  tags: replacement-dns
+
+- name: Task 3 | Replacement dns on {{ public_interface | default("not") }}
+  lineinfile:
+    path: '/etc/sysconfig/network-scripts/{{ public_interface | default("not") }}'
+    regexp: "{{ item.before }}"
+    insertbefore: BOF
+    line: "{{ item.after }}"
+  ignore_errors: True
+  with_items:
+    - { before: 'DNS1=192.168.0.13.*', after: 'DNS1=172.21.211.40' }
+    - { before: 'DNS2=192.168.200.53.*', after: 'DNS2=172.21.211.41' }
+#  notify: Restart network
+  when: ansible_distribution == 'CentOS'
+  tags: replacement-dns
+
+- name: Task 3  | ls /etc/netplan/
+  shell: 'ls'
+  args:
+    chdir: "/etc/netplan/"
+  register: out1
+  when: ansible_distribution == 'Ubuntu'
+  tags: replacement-dns
+
+- name: Task 3  | Resolv DNS Server
+  debug: msg="{{ out1.stdout_lines }}"
+  when: ansible_distribution == 'Ubuntu'
+  tags: replacement-dns
+
+- name: Task 3 | Replacement dns on {{ public_interface | default("not") }}
+  shell: "sed -i -e 's/{{ item.before }}/{{ item.after }}/g' 00-installer-config.yaml"
+  args:
+    chdir: "/etc/netplan/"
+  with_items:
+    - { before: '192.168.0.13', after: '172.21.211.40' }
+    - { before: '192.168.200.53', after: '172.21.211.41' }
+#  notify: Apply netplan
+  when: ansible_distribution == 'Ubuntu'
+  tags: replacement-dns
+
+- name: Task 4 | Restart network
+  service:
+    name: network
+    state: restarted
+  when: ansible_distribution == 'CentOS'
+  tags: replacement-dns
+
+- name: Task 4 | Apply netplan
+  command: netplan apply
+  async: 45
+  poll: 0
+  when: ansible_distribution == 'Ubuntu'
+  tags: replacement-dns
+
+- name: Task 5  | Resolv DNS Server
+  shell: 'cat /etc/resolv.conf | grep nameserver'
+  register: out
+  when: ansible_distribution == 'CentOS'
+  tags: replacement-dns
+
+- name: Task 5  | Resolv DNS Server
+  shell: 'resolvectl status | grep "DNS Server" -A2'
+  register: out
+  when: ansible_distribution == 'Ubuntu'
+  tags: replacement-dns
+
+- name: Task 5  | Resolv DNS Server
+  debug: msg="{{ out.stdout_lines }}"
+  tags: replacement-dns
