@@ -1,12 +1,12 @@
 ---
 user: "nedago"
 user_comment: "Denis Polyakov"
-#Зашифровать: ansible-vault encrypt_string --vault-id dev@a_password_file --stdin-name 'user_password'
-#или: echo -n 'myPassword' | ansible-vault encrypt_string --vault-id dev@a_password_file --stdin-name 'user_password'
-#Расшифровать: ansible localhost -m ansible.builtin.debug -a var="user_password" -e "local.yml" --vault-id dev@a_password_file
+# Зашифровать: ansible-vault encrypt_string --vault-id dev@a_password_file --stdin-name 'user_password'
+# или: echo -n 'myPassword' | ansible-vault encrypt_string --vault-id dev@a_password_file --stdin-name 'user_password'
+# Расшифровать: ansible localhost -m ansible.builtin.debug -a var="user_password" -e "local.yml" --vault-id dev@a_password_file
 
 # created with:
 # ansible all -i localhost, -m debug -a "msg={{ 'mypassword' | password_hash('sha512', 'mysecretsalt') }}"
-user_password: "$6$rounds=656000$iArWtydQnQVc4a$J0yNd26xgBCMxDGH0fvPITxEvyE8rp1ZvDLfXvBkykNy8CjM0ZpR0b8O.UNhDqhgZaQ7ejdNL0Tpzp4.ervnb."
+# user_password: "$6$rounds=656000$iArWtydQnQVc4a$J0yNd26xgBCMxDGH0fvPITxEvyE8rp1ZvDLfXvBkykNy8CjM0ZpR0b8O.UNhDqhgZaQ7ejdNL0Tpzp4.ervnb."
 read_token: "{{ access_read_token }}"
 branch: "main"

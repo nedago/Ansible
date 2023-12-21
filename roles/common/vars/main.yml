@@ -1,0 +1,3 @@
+user: "nedago"
+user_comment: "Denis Polyakov"
+user_password: "{{ user_password_sc }}" #см. secrets.yml

@@ -1,5 +1,5 @@
 ---
-- name: docker | Install apt packages
+- name: Task 1 | Install apt packages
   apt: 
     pkg: 
     - ca-certificates
@@ -8,17 +8,17 @@
     update_cache: yes
   tags: docker
 
-- name: docker | Add Docker’s official GPG key
+- name: Task 2 | Add Docker’s official GPG key
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
   tags: docker
 
-- name: docker | Add repository docker
+- name: Task 3 | Add repository docker
   apt_repository:
     repo: deb [arch=arm64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable
   tags: docker
 
-- name: docker | Install docker pakages
+- name: Task 4 | Install docker pakages
   apt: 
     pkg: 
     - docker-ce
@@ -30,13 +30,13 @@
     update_cache: yes
   tags: docker
 
-- name: docker | Creates directory
+- name: Task 5 | Creates directory
   file:
     path: /etc/docker
     state: directory
   tags: docker
 
-- name: docker | Copy file daemon.json on dest
+- name: Task 6 | Copy file daemon.json on dest
   copy:
     src: daemon.json
     dest: /etc/docker/daemon.json
@@ -46,14 +46,14 @@
   notify: Restart_service_docker
   tags: docker
 
-- name: docker | Add the user '{{ host_user }}' group of 'docker'
+- name: Task 7 | Add the user '{{ host_user }}' group of 'docker'
   user:
     name: "{{ user }}"
     comment: "{{ user_comment }}"
     group: docker
   tags: docker
 
-- name: docker | Install required python docker modules
+- name: Task 8 | Install required python docker modules
   pip:
     name:
       - docker

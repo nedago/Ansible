@@ -1,34 +1,34 @@
 ---
-- name: cert | Clean directory SSL path
+- name: Task 1 | Clean directory SSL path
   file:
     state: absent
     path: "{{ cert_path }}"
   tags: cert
 
-- name: cert | Creates directory SSL for nginx
+- name: Task 2 | Creates directory SSL for nginx
   file:
     path: "{{ cert_path }}"
     state: directory
   tags: cert
 
-- name:  cert | Add cert for nginx
+- name:  Task 3 | Add cert for nginx
   copy:
     src: "{{ cert_pem }}"
     dest: "{{ cert_path }}/star.crt"
   tags: cert
 
-- name: cert | Add key cert for nginx
+- name: Task 4 | Add key cert for nginx
   copy:
     src: "{{ cert_key }}"
     dest: "{{ cert_path }}/star.key"
   tags: cert
 
-- name: cert | chown cert
+- name: Task 5 | chown cert
   file: 
     dest: "{{ cert_path }}"
     owner: root
     mode: 0600
     recurse: yes
   tags: cert
-
 ...
+
