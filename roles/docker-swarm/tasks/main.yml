@@ -20,18 +20,18 @@
     networks:
       - communicate-network
   tags: docker-swarm
-#
-#- name: Task 4 | Log into private registry and force re-authorization
-#  docker_login:
-#    registry: '{{ registry }}'
-#    username: '{{ registry_username }}'
-#    password: '{{ registry_password }}'
-#    reauthorize: yes
-#  tags: docker-swarm
-#
-#- name: Task 5 | Log out of DockerHub
-#  docker_login:
-#    state: absent
-#  tags: docker-swarm
-#
+
+- name: Task 4 | Log into private registry and force re-authorization
+  docker_login:
+    registry: '{{ registry }}'
+    username: '{{ registry_username }}'
+    password: '{{ registry_password }}'
+    reauthorize: true
+  tags: docker-swarm
+
+- name: Task 5 | Log out of DockerHub
+  docker_login:
+    state: absent
+  tags: docker-swarm
+
 ...

@@ -11,7 +11,7 @@
     state: directory
   tags: cert
 
-- name:  Task 3 | Add cert for nginx
+- name: Task 3 | Add cert for nginx
   copy:
     src: "{{ cert_pem }}"
     dest: "{{ cert_path }}/star.crt"
