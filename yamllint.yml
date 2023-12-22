@@ -1,0 +1,22 @@
+# yamllint -c yamllint.yml ./
+# https://yamllint.readthedocs.io/en/stable/rules.html#module-yamllint.rules.braces
+---
+extends: default
+
+rules:
+  line-length:
+    max: 120
+    level: warning
+  braces:
+    forbid: false
+    min-spaces-inside: 1
+    max-spaces-inside: 1
+    min-spaces-inside-empty: -1
+    max-spaces-inside-empty: -1
+  colons:
+    max-spaces-before: 0
+    max-spaces-after: 1
+
+ignore:
+  - secrets.yml
+...
