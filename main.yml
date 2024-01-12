@@ -43,4 +43,19 @@
   roles:
     - role: replacement-dns
 
+- name: ldap
+  hosts: "ldap"
+  vars_files:
+    - secrets.yml
+  roles:
+    - role: docker
+    - role: ldap
+
+- name: deploy apache_exporter
+  hosts: "apache_exporter"
+  vars_files:
+    - secrets.yml
+  roles:
+    - role: apache_exporter
+  become: true
 ...

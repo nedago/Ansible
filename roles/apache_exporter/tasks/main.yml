@@ -1,0 +1,104 @@
+---
+- name: Task 1 | Install yum packeges
+  ansible.builtin.yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+    - tar
+    - gzip
+    - wget
+  when: ansible_distribution == 'CentOS'
+  tags: apache_exporter
+
+- name: Task 2 | Install apt packeges
+  ansible.builtin.apt:
+    pkg: 
+    - tar
+    - gzip
+    - wget
+    update_cache: no  
+  when: ansible_distribution == 'Ubuntu'
+  tags: apache_exporter
+
+- name: Task 3 | Add user apache_exporter
+  ansible.builtin.user:
+    name: apache_exporter
+    comment: User for run apache_exporter
+    shell: /sbin/nologin
+  tags: apache_exporter
+
+- name: Task 4 | Download tar apache_exporter_vervion
+  ansible.builtin.get_url:
+    url: https://github.com/Lusitaniae/apache_exporter/releases/download/v{{ apache_exporter_vervion }}/apache_exporter-{{ apache_exporter_vervion }}.linux-amd64.tar.gz
+    dest: /tmp/apache_exporter-{{ apache_exporter_vervion }}.linux-amd64.tar.gz
+  tags: apache_exporter
+
+- name: Task 5 | Unarchive a file that is already on the remote machine
+  ansible.builtin.unarchive:
+    src: /tmp/apache_exporter-{{ apache_exporter_vervion }}.linux-amd64.tar.gz
+    dest: /tmp
+    mode: '0777'
+    remote_src: true
+  tags: apache_exporter
+
+- name: Task 6 | Copy file with owner and permission, using symbolic representation
+  ansible.builtin.copy:
+    src: /tmp/apache_exporter-{{ apache_exporter_vervion }}.linux-amd64/apache_exporter
+    dest: /usr/sbin/
+    remote_src: true
+    mode: '0770'
+    owner: apache_exporter
+    group: apache_exporter
+  tags: apache_exporter
+
+- name: Task 7 | Delete content & directory
+  ansible.builtin.file:
+    state: absent
+    path: '{{ item }}'
+  with_items:
+    - '/tmp/apache_exporter-{{ apache_exporter_vervion }}.linux-amd64.tar.gz'
+    - '/tmp/apache_exporter-{{ apache_exporter_vervion }}.linux-amd64'
+  tags: apache_exporter
+
+- name: Task 8 | Add apache_exporter.service
+  ansible.builtin.copy:
+    src: files/apache_exporter.service
+    dest: /etc/systemd/system/apache_exporter.service
+  ignore_errors: true
+  tags: apache_exporter
+
+- name: Task 9 | Just force systemd to reread configs
+  ansible.builtin.systemd:
+    daemon_reload: yes 
+  tags: apache_exporter
+
+- name: Task 10 | Enable apache_exporter.service
+  ansible.builtin.systemd:
+    name: apache_exporter.service
+    state: started
+    enabled: true
+  tags: apache_exporter
+
+- name: Task 11 | Allow access to tcp port 9117 from host {{ servers_prometheus }} and include a comment
+  ansible.builtin.ufw:
+    rule: allow
+    proto: tcp
+    src: '{{ item }}'
+    port: '9117'
+    comment: Allow port for prometheus
+  loop: '{{ servers_prometheus }}'
+  when: ansible_distribution == 'Ubuntu'
+  tags: apache_exporter
+
+- name: Task 12 | Allow access to tcp port 9117 from host {{ servers_prometheus }}
+  ansible.posix.firewalld:
+    rich_rule: rule family=ipv4 source address="{{ item }}" port port=9117 protocol=tcp accept
+    zone: public
+    permanent: true
+    immediate: true
+    state: enabled
+  loop: '{{ servers_prometheus }}'
+  when: ansible_distribution == 'CentOS'
+  tags: apache_exporter
+...

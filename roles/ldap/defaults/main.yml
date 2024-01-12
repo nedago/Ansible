@@ -1,0 +1,18 @@
+---
+TAG: "1.5.0"
+LDAP_ORGANISATION: "HSE"
+LDAP_DOMAIN: "hse.ru"
+# LDAP_ADMIN_PASSWORD: "JonSn0w"  см. secrets.yml
+
+LDAP_PATH: "/opt/ldap"
+LDAP_DATABASE: "/opt/ldap/database"
+LDAP_CONFIG: "/opt/ldap/config"
+
+eType: none
+ou: git
+user_name: nedago
+user_mail: nedago1@gmail.com
+user_sword: swOrd
+fName: Polyakov
+Name: Denis
+...
