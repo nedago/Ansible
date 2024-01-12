@@ -46,27 +46,3 @@ ExtendedStatus On
 `service httpd restart`
 
 
-  
-___
-### Инструкция по запуску на локальной машине:
-1. Скачать данный репозитори.    
-```shell
-git clone https://gitlab.hse.ru/ansible/***.git
-```
-2. Перейти в его каталог.
-```shell
-cd ***/
-```
-3. Скопировать файл с паролем от секретов в папку с копией репозитория.   
-```shell
-cp PATH_MY_ FILES/a_password_file  .  
-```
-4. Добавить в файл `hosts` строку с необходимым сервером для замены dns.  
-```shell
-vi hosts   
-```
-5. Запустить плейбук.   
-```shell
-ansible-playbook -i hosts main.yml --private-key ~/Documents/HSE/id_rsa.ci_app --vault-password-file a_password_file -vv  
-```
-
