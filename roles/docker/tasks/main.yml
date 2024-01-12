@@ -26,6 +26,7 @@
       - containerd.io
       - docker-buildx-plugin
       - docker-compose-plugin
+      - docker-compose
       - python3-pip
     update_cache: true
   tags: docker
@@ -53,10 +54,10 @@
     group: docker
   tags: docker
 
-- name: Task 8 | Install required python docker modules
-  pip:
-    name:
-      - docker
-      - docker-compose
-  tags: docker
+#- name: Task 8 | Install required python docker modules
+#  pip:
+#    name:
+#        - docker == 7.0.0
+#        - docker-compose == 1.29.2
+#  tags: docker
 ...

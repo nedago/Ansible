@@ -1,0 +1,6 @@
+---
+apache_exporter_vervion: 0.5.0
+servers_prometheus:
+  - 192.168.197.205
+#  - 172.18.211.43
+...

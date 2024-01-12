@@ -1,0 +1,58 @@
+---
+- name: Task 1 | Allow all access to tcp port 389, 636
+  ansible.builtin.ufw:
+    rule: allow
+    port: '{{ item }}'
+    proto: tcp
+  loop:
+    - '389'
+    - '636'
+  tags: ldap
+
+- name: Task 2 | Creates directory
+  ansible.builtin.file:
+    path: '{{ item }}'
+    state: directory
+  with_items:
+    - '{{ LDAP_PATH }}'
+    - '{{ LDAP_DATABASE }}'
+    - '{{ LDAP_CONFIG }}'
+  tags: ldap
+
+- name: Task 3 | Copy Docker Compose files
+  ansible.builtin.template:
+    src: templates/{{ item }}
+    dest: '{{ LDAP_PATH }}/docker-compose.yml'
+  loop:
+    - docker-compose.yml.j2
+  tags: ldap
+
+- name: Task 4 | Deploy Docker Compose stack
+  community.docker.docker_compose:
+    project_src: '{{ LDAP_PATH }}'
+    files:
+      - docker-compose.yml
+  tags: ldap
+
+#- name: Task 4 | Deploy Docker Compose stack
+#  ansible.builtin.shell: 'docker-compose up -d'
+#  args:
+#    chdir: '{{ LDAP_PATH }}'
+#  tags: ldap
+
+- name: Task 5 | Creates import template
+  ansible.builtin.template:
+    src: templates/ldap.ldif.j2
+    dest: '{{ LDAP_CONFIG }}/ldap.ldif'
+  tags: ldap
+
+- name: Run a simple command (command)
+  community.docker.docker_container_exec:
+    container: ldap
+    command: /bin/bash -c 'ldapadd -f /etc/ldap/slapd.d/ldap.ldif -H ldap://localhost -D "cn=admin,dc=hse,dc=ru" -x -w {{ LDAP_ADMIN_PASSWORD }}'
+  register: result
+
+- name: Print stdout
+  ansible.builtin.debug:
+    var: result.stdout
+...

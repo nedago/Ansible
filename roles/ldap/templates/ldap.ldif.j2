@@ -1,0 +1,9 @@
+dn: uid={{ user_name }}, cn={{ ou }}, ou=groups, dc=hse, dc=ru
+objectClass: inetOrgPerson
+mail: {{ user_mail }}
+uid: {{ user_name }}
+userPassword: {{ user_sword }}
+givenName: {{ Name }}
+sn: {{ fName }}
+cn: {{ Name }} {{ fName }}
+employeeType: {{ eType }}

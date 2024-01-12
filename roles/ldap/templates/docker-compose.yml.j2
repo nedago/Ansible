@@ -1,0 +1,18 @@
+---
+version: '3.7'
+services:
+  openldap:
+    image: 'osixia/openldap:{{ TAG }}'
+    container_name: ldap
+    restart: always
+    environment:
+      LDAP_ORGANISATION: '{{ LDAP_ORGANISATION }}'
+      LDAP_DOMAIN: '{{ LDAP_DOMAIN }}'
+      LDAP_ADMIN_PASSWORD: '{{ LDAP_ADMIN_PASSWORD }}'
+    volumes:
+      - '{{ LDAP_DATABASE }}:/var/lib/ldap'
+      - '{{ LDAP_CONFIG }}:/etc/ldap/slapd.d'
+    ports:
+      - '389:389'
+      - '636:636'
+...

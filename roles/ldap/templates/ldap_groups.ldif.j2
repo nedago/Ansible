@@ -1,0 +1,35 @@
+version: 1
+
+# Создаём ветку groups ПЕРВОГО уровня иерархии
+dn: ou=groups,dc=hse,dc=ru
+objectclass:organizationalunit
+ou: groups
+description: generic groups branch
+
+# Создаём запись git в groups
+dn: cn=git,ou=groups,dc=hse,dc=ru
+objectclass: groupofnames
+cn: git
+description: GitLab group
+member: cn=admin,ou=groups,dc=hse,dc=ru
+
+# Создаём запись nexus в groups
+dn: cn=nexus,ou=groups,dc=hse,dc=ru
+objectclass: groupofnames
+cn: nexus
+description: Nexus group
+member: cn=admin,ou=groups,dc=hse,dc=ru
+
+# Создаём запись jenikns в groups
+dn: cn=jenikns,ou=groups,dc=hse,dc=ru
+objectclass: groupofnames
+cn: jenikns
+description: Jenikns group
+member: cn=admin,ou=groups,dc=hse,dc=ru
+
+# Создаём запись linux в groups
+dn: cn=linux,ou=groups,dc=hse,dc=ru
+objectclass: groupofnames
+cn: linux
+description: Linux group
+member: cn=admin,ou=groups,dc=hse,dc=ru
