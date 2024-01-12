@@ -66,4 +66,13 @@
   roles:
     - role: apache_exporter
   become: true
+
+- name: deploy backup_db
+  hosts: "backup_db"
+  vars_files:
+    - secrets.yml
+  roles:
+    - role: backup_db
+  become: true
 ...
+
