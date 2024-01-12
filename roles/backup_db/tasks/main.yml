@@ -1,0 +1,35 @@
+---
+- name: Task 1 | Install apt packeges
+  ansible.builtin.apt:
+    pkg: 
+    - nfs-common
+    - rsync
+    - bzip2
+    update_cache: yes  
+  when: ansible_distribution == 'Ubuntu'
+  tags: backup_db
+
+- name: Task 2 | Create directory systembackup
+  ansible.builtin.file:
+    path: "/mnt/backup_{{ backup_mount }}"
+    state: directory
+    owner: "{{ user_backup }}"
+    group: "{{ group_backup }}"
+    mode: 0700
+    state: directory
+  tags: backup_db
+
+- name: Task 3 | Copy file {{ backupDB_script }}
+  ansible.builtin.template:
+    src: templates/backupDB.sh.j2
+    dest: "/usr/local/bin/{{ backupDB_script }}"
+    mode: 0700
+  tags: backup_db
+
+- name: Task 4 | Ensure a job that runs script. Creates an entry like '0 2 * * /usr/local/bin/{{ backupDB_script }}'
+  ansible.builtin.cron:
+    name: "start script DB"
+    minute: "00"
+    hour: "8"
+    job: '/usr/local/bin/{{ backupDB_script }}'
+  tags: backup_db

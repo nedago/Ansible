@@ -1,0 +1,35 @@
+#!/bin/sh
+# Зададим переменные
+DATE=$(date +%Y%m%d)
+
+# Для инструкций по восстановлению см. postgresql.org/docs/8.1/static/backup.html
+# Устанавливаем разделитель для элементов массива, предварительно резервируя системный:
+oldIFS==$IFS
+IFS=";"
+
+# Срок хранения резервных копий, дней:
+dump_keepdays="{{ dump_keepdays }}"
+
+# Названия баз данных, которые будем сохранять, перечисленные через разделитель, заданный выше
+dump_bases={{ dump_base }}
+
+# Контур сервера БД, прод или тест
+group_server={{ group }}
+
+#Резервное копирование
+cd /
+mount -t nfs {{ backup_store }} /mnt/backup_{{ backup_mount }}
+
+for dump_base in $dump_bases; do
+# Создаём дамп от имени пользователя postgres, в сжатый файл с именем вида %dbname%-yyyy-mm-dd.pgdump
+  sudo -u postgres pg_dump -F c -Z 9 \
+  -f  /tmp/$dump_base-$group_server-$DATE.pgdump $dump_base
+
+#перемещаем дамп на сетевую шару
+  mv /tmp/$dump_base-* /mnt/backup_{{ backup_mount }}
+# Ищем в каталоге резервных копий все файлы с именами похожими на бэкап текущей БД и старше срока хранения и удаляем
+  find /mnt/backup_{{ backup_mount }}/$dump_base*.pgdump -mtime +$dump_keepdays -exec /bin/rm '{}' \;
+done
+umount /mnt/backup_{{ backup_mount }}
+# Восстанавливаем стандартный (системный) разделитель списков
+IFS=$oldIFS

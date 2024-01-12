@@ -1,0 +1,15 @@
+---
+user_backup: "root"
+group_backup: "root"
+
+backupDB_script: "backupDB.sh"
+group: test
+backup_store: '192.168.10.100:/backup/pud20'
+# day copy arhive
+dump_keepdays: 30
+
+# [pud20 base]
+backup_mount: "pud20"
+# DB-postgres base name
+dump_base: "dp;dp2;dp3"
+...
