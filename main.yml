@@ -51,6 +51,14 @@
     - role: docker
     - role: ldap
 
+- name: deploy node_exporter
+  hosts: "node_exporter"
+  vars_files:
+    - secrets.yml
+  roles:
+    - role: node_exporter
+  become: true
+
 - name: deploy apache_exporter
   hosts: "apache_exporter"
   vars_files:
