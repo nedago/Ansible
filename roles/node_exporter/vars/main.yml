@@ -1,0 +1,7 @@
+---
+#node_exporter_vervion: 1.6.1
+node_exporter_vervion: 1.0.1
+servers_prometheus:
+  - 192.168.197.205
+#  - 172.18.211.43
+...

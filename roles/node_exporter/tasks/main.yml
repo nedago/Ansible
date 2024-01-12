@@ -1,0 +1,116 @@
+---
+- name: Task 1 | Install yum packeges
+  ansible.builtin.yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+    - tar
+    - gzip
+    - wget
+  when: ansible_distribution == 'CentOS'
+  tags: node_exporter
+
+- name: Task 2 | Install apt packeges
+  ansible.builtin.apt:
+    pkg: 
+    - tar
+    - gzip
+    - wget
+    update_cache: no  
+  when: ansible_distribution == 'Ubuntu'
+  tags: node_exporter
+
+- name: Task 3 | Add user node_exporter
+  ansible.builtin.user:
+    name: node_exporter
+    comment: User for run node_exporter
+    shell: /sbin/nologin
+  tags: node_exporter
+
+- name: Task 4 | Download tar node_exporter
+  ansible.builtin.get_url:
+    url: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_vervion }}/node_exporter-{{ node_exporter_vervion }}.linux-amd64.tar.gz
+    dest: /tmp/node_exporter-{{ node_exporter_vervion }}.linux-amd64.tar.gz
+  tags: node_exporter
+
+- name: Task 5 | Unarchive a file that is already on the remote machine
+  ansible.builtin.unarchive:
+    src: /tmp/node_exporter-{{ node_exporter_vervion }}.linux-amd64.tar.gz
+    dest: /tmp
+    mode: '0777'
+    remote_src: true
+  tags: node_exporter
+
+- name: Task 6 | Copy file with owner and permission, using symbolic representation
+  ansible.builtin.copy:
+    src: /tmp/node_exporter-{{ node_exporter_vervion }}.linux-amd64/node_exporter
+    dest: /usr/sbin/
+    remote_src: true
+    mode: '0770'
+    owner: node_exporter
+    group: node_exporter
+  tags: node_exporter
+
+- name: Task 7 | Delete content & directory
+  ansible.builtin.file:
+    state: absent
+    path: '{{ item }}'
+  with_items:
+    - '/tmp/node_exporter-{{ node_exporter_vervion }}.linux-amd64.tar.gz'
+    - '/tmp/node_exporter-{{ node_exporter_vervion }}.linux-amd64'
+  tags: node_exporter
+
+- name: Task 8 | Add node_exporter.service
+  ansible.builtin.copy:
+    src: files/node_exporter.service
+    dest: /etc/systemd/system/node_exporter.service
+  ignore_errors: true
+  tags: node_exporter
+
+- name: Task 9 | Creates directory /etc/sysconfig
+  ansible.builtin.file:
+    path: /etc/sysconfig
+    state: directory
+  tags: node_exporter
+
+- name: Task 10 | Add node_exporter system file
+  ansible.builtin.copy:
+    src: files/node_exporter
+    dest: /etc/sysconfig/node_exporter
+  tags: node_exporter
+
+- name: Task 11 | Just force systemd to reread configs
+  ansible.builtin.systemd:
+    daemon_reload: yes 
+  tags: node_exporter
+
+- name: Task 12 | Enable node_exporter.service
+  ansible.builtin.systemd:
+    name: node_exporter.service
+    state: started
+    enabled: true
+  tags: node_exporter
+
+- name: Task 13 | Allow access to tcp port 9100 from host {{ servers_prometheus }} and include a comment
+  ansible.builtin.ufw:
+    rule: allow
+    proto: tcp
+    src: '{{ item }}'
+    port: '9100'
+    comment: Allow port for prometheus
+  loop: '{{ servers_prometheus }}'
+  when: ansible_distribution == 'Ubuntu'
+  tags: node_exporter
+
+- name: Task 14 | Allow access to tcp port 9100 from host {{ servers_prometheus }}
+  ansible.posix.firewalld:
+    rich_rule: rule family=ipv4 source address="{{ item }}" port port=9100 protocol=tcp accept
+    zone: public
+    permanent: true
+    immediate: true
+    state: enabled
+  loop: '{{ servers_prometheus }}'
+  when: ansible_distribution == 'CentOS'
+  tags: node_exporter
+...
