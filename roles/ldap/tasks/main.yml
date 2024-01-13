@@ -34,11 +34,11 @@
       - docker-compose.yml
   tags: ldap
 
-#- name: Task 4 | Deploy Docker Compose stack
-#  ansible.builtin.shell: 'docker-compose up -d'
-#  args:
-#    chdir: '{{ LDAP_PATH }}'
-#  tags: ldap
+# - name: Task 4 | Deploy Docker Compose stack
+#   ansible.builtin.shell: 'docker-compose up -d'
+#   args:
+#     chdir: '{{ LDAP_PATH }}'
+#   tags: ldap
 
 - name: Task 5 | Creates import template
   ansible.builtin.template:

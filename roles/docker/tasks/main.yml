@@ -54,10 +54,10 @@
     group: docker
   tags: docker
 
-#- name: Task 8 | Install required python docker modules
-#  pip:
-#    name:
-#        - docker == 7.0.0
-#        - docker-compose == 1.29.2
-#  tags: docker
+# - name: Task 8 | Install required python docker modules
+#   pip:
+#     name:
+#         - docker == 7.0.0
+#         - docker-compose == 1.29.2
+#   tags: docker
 ...

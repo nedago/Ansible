@@ -1,11 +1,11 @@
 ---
 - name: Task 1 | Install apt packeges
   ansible.builtin.apt:
-    pkg: 
-    - nfs-common
-    - rsync
-    - bzip2
-    update_cache: yes  
+    pkg:
+      - nfs-common
+      - rsync
+      - bzip2
+    update_cache: true
   when: ansible_distribution == 'Ubuntu'
   tags: backup_db
 
@@ -16,7 +16,6 @@
     owner: "{{ user_backup }}"
     group: "{{ group_backup }}"
     mode: 0700
-    state: directory
   tags: backup_db
 
 - name: Task 3 | Copy file {{ backupDB_script }}
