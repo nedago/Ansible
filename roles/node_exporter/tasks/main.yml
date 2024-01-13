@@ -5,19 +5,19 @@
     state: latest
   vars:
     packages:
-    - tar
-    - gzip
-    - wget
+      - tar
+      - gzip
+      - wget
   when: ansible_distribution == 'CentOS'
   tags: node_exporter
 
 - name: Task 2 | Install apt packeges
   ansible.builtin.apt:
-    pkg: 
-    - tar
-    - gzip
-    - wget
-    update_cache: no  
+    pkg:
+      - tar
+      - gzip
+      - wget
+    update_cache: false
   when: ansible_distribution == 'Ubuntu'
   tags: node_exporter
 
@@ -82,7 +82,7 @@
 
 - name: Task 11 | Just force systemd to reread configs
   ansible.builtin.systemd:
-    daemon_reload: yes 
+    daemon_reload: true
   tags: node_exporter
 
 - name: Task 12 | Enable node_exporter.service
